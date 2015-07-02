@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd"
+>
+    <entity name="Assimtech\Dislog\ApiCall" table="api_call">
+        <indexes>
+            <index columns="endpoint" />
+            <index columns="method" />
+            <index columns="reference" />
+            <index columns="request_time" />
+        </indexes>
+
+        <id name="id" type="bigint">
+            <generator strategy="AUTO" />
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </id>
+
+        <field name="endpoint" type="string" length="255" />
+        <field name="method" type="string" length="255" />
+        <field name="reference" type="string" length="255" nullable="true" />
+        <field name="requestTime" column="request_time" type="float" />
+        <field name="requestDateTime" column="request_datetime" type="datetime" />
+        <field name="duration" type="float" nullable="true" />
+        <field name="request" type="text" nullable="true" />
+        <field name="response" type="text" nullable="true" />
+    </entity>
+</doctrine-mapping>
