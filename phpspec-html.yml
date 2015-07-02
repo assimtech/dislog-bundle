@@ -1,0 +1,13 @@
+suites:
+    AssimtechDislogBundle:
+        namespace: Assimtech\DislogBundle
+        psr4_prefix: Assimtech\DislogBundle
+
+extensions:
+    - PhpSpec\Extension\CodeCoverageExtension
+
+code_coverage:
+    format:
+        - html
+    output:
+        html: coverage
