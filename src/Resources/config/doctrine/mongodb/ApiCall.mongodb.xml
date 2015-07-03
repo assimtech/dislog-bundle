@@ -4,12 +4,13 @@
     xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping
     http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd"
 >
-    <document name="Assimtech\Dislog\ApiCall">
+    <document name="Assimtech\Dislog\ApiCall" collection="api_call">
         <indexes>
             <index columns="endpoint" />
             <index columns="method" />
             <index columns="reference" />
             <index columns="request_time" />
+            <index columns="request_datetime" />
         </indexes>
 
         <field fieldName="id" id="true" />

@@ -10,6 +10,7 @@
             <index columns="method" />
             <index columns="reference" />
             <index columns="request_time" />
+            <index columns="request_datetime" />
         </indexes>
 
         <id name="id" type="bigint">
