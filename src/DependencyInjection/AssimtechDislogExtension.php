@@ -9,6 +9,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use InvalidArgumentException;
 
 class AssimtechDislogExtension extends Extension
 {
@@ -34,7 +35,6 @@ class AssimtechDislogExtension extends Extension
         $handlerType = $handlers[0];
         $handlerConfig = $config['handler'][$handlerType];
 
-        $definition = null;
         switch ($handlerType) {
             case 'stream':
                 $arguments = array(
@@ -56,6 +56,11 @@ class AssimtechDislogExtension extends Extension
                     $handlerConfig['name']
                 );
                 return $this;
+            default:
+                throw new InvalidArgumentException(sprintf(
+                    'Unsupported handler type: %s',
+                    $handlerType
+                ));
         }
 
         $container->setDefinition($handlerServiceId, $definition);
