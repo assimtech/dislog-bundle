@@ -9,7 +9,6 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use InvalidArgumentException;
 
 class AssimtechDislogExtension extends Extension
 {
@@ -35,6 +34,7 @@ class AssimtechDislogExtension extends Extension
         $handlerType = $handlers[0];
         $handlerConfig = $config['handler'][$handlerType];
 
+        $definition = null;
         switch ($handlerType) {
             case 'stream':
                 $arguments = array(
@@ -69,7 +69,7 @@ class AssimtechDislogExtension extends Extension
             new Reference('assimtech_dislog.api_call.factory'),
             new Reference('assimtech_dislog.handler'),
             $config['preferences'],
-            new Reference($config['psr_logger'], array(), ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+            new Reference($config['psr_logger'], ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
         );
 
         $definition = new Definition('Assimtech\Dislog\ApiCallLogger', $arguments);
