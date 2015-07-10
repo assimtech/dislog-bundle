@@ -32,9 +32,6 @@ class AssimtechDislogExtension extends Extension
         $handlerServiceId = 'assimtech_dislog.handler';
 
         $handlers = array_keys($config['handler']);
-        if (count($handlers) !== 1) {
-            throw new InvalidArgumentException('Exactly 1 handler must be configured');
-        }
         $handlerType = $handlers[0];
         $handlerConfig = $config['handler'][$handlerType];
 
@@ -59,11 +56,6 @@ class AssimtechDislogExtension extends Extension
                     $handlerConfig['name']
                 );
                 return $this;
-            default:
-                throw new InvalidArgumentException(sprintf(
-                    'Unsupported handler type: %s',
-                    $handlerType
-                ));
         }
 
         $container->setDefinition($handlerServiceId, $definition);
