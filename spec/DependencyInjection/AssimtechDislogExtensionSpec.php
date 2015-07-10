@@ -6,7 +6,6 @@ use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
-use InvalidArgumentException;
 
 class AssimtechDislogExtensionSpec extends ObjectBehavior
 {
