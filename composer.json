@@ -11,8 +11,6 @@
         "symfony/http-kernel": "~2.0"
     },
     "require-dev": {
-        "doctrine/common": "~2.0",
-
         "sebastian/phpcpd": "~2.0",
         "squizlabs/php_codesniffer": "~2.3",
         "phpmd/phpmd": "~2.2",
