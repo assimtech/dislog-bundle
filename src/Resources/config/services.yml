@@ -5,6 +5,10 @@ parameters:
 
     assimtech_dislog.serializer.string.class: Assimtech\Dislog\Serializer\StringSerializer
 
+    assimtech_dislog.processor.regex_replace.class: Assimtech\Dislog\Processor\RegexReplace
+    assimtech_dislog.processor.string_replace.class: Assimtech\Dislog\Processor\StringReplace
+
+
 services:
     assimtech_dislog.api_call.factory:
         class: %assimtech_dislog.api_call.factory.class%

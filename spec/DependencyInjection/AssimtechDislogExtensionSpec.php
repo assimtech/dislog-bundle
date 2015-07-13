@@ -30,6 +30,16 @@ class AssimtechDislogExtensionSpec extends ObjectBehavior
             'Assimtech\Dislog\Serializer\StringSerializer'
         )->shouldBeCalled();
 
+        $container->setParameter(
+            'assimtech_dislog.processor.regex_replace.class',
+            'Assimtech\Dislog\Processor\RegexReplace'
+        )->shouldBeCalled();
+
+        $container->setParameter(
+            'assimtech_dislog.processor.string_replace.class',
+            'Assimtech\Dislog\Processor\StringReplace'
+        )->shouldBeCalled();
+
         $container->setDefinition(
             'assimtech_dislog.api_call.factory',
             Argument::type('Symfony\Component\DependencyInjection\Definition')

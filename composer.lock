@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/assimtech/dislog.git",
-                "reference": "f9b3cb136733a31fe324334e2ccc2dc58920d097"
+                "reference": "8b9ba25e4d77f092f5099c0a37908461e0444445"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/assimtech/dislog/zipball/f9b3cb136733a31fe324334e2ccc2dc58920d097",
-                "reference": "f9b3cb136733a31fe324334e2ccc2dc58920d097",
+                "url": "https://api.github.com/repos/assimtech/dislog/zipball/8b9ba25e4d77f092f5099c0a37908461e0444445",
+                "reference": "8b9ba25e4d77f092f5099c0a37908461e0444445",
                 "shasum": ""
             },
             "require": {
@@ -45,7 +45,7 @@
             ],
             "description": "API call logger",
             "homepage": "https://github.com/assimtech/dislog",
-            "time": "2015-07-10 01:40:00"
+            "time": "2015-07-13 06:24:07"
         },
         {
             "name": "psr/log",
