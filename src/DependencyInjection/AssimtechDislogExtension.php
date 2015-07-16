@@ -6,10 +6,8 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use InvalidArgumentException;
 
 class AssimtechDislogExtension extends Extension
 {
@@ -37,49 +35,45 @@ class AssimtechDislogExtension extends Extension
 
         switch ($handlerType) {
             case 'stream':
-                $arguments = array(
-                    $handlerConfig['resource'],
-                    new Reference($handlerConfig['identity_generator']),
-                    new Reference($handlerConfig['serializer']),
-                );
-                $definition = new Definition('Assimtech\Dislog\Handler\Stream', $arguments);
+                $container
+                    ->register($handlerServiceId, 'Assimtech\Dislog\Handler\Stream')
+                    ->setArguments(array(
+                        $handlerConfig['resource'],
+                        new Reference($handlerConfig['identity_generator']),
+                        new Reference($handlerConfig['serializer']),
+                    ))
+                ;
                 break;
             case 'doctrine_object_manager':
-                $arguments = array(
-                    new Reference($handlerConfig['object_manager']),
-                );
-                $definition = new Definition('Assimtech\Dislog\Handler\DoctrineObjectManager', $arguments);
+                $container
+                    ->register($handlerServiceId, 'Assimtech\Dislog\Handler\DoctrineObjectManager')
+                    ->setArguments(array(
+                        new Reference($handlerConfig['object_manager']),
+                    ))
+                ;
                 break;
             case 'service':
                 $container->setAlias(
                     $handlerServiceId,
                     $handlerConfig['name']
                 );
-                return $this;
-            default:
-                throw new InvalidArgumentException(sprintf(
-                    'Unsupported handler type: %s',
-                    $handlerType
-                ));
+                break;
         }
-
-        $container->setDefinition($handlerServiceId, $definition);
 
         return $this;
     }
 
     protected function createLoggerDefinition($config, ContainerBuilder $container)
     {
-        $arguments = array(
-            new Reference('assimtech_dislog.api_call.factory'),
-            new Reference('assimtech_dislog.handler'),
-            $config['preferences'],
-            new Reference($config['psr_logger'], ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
-        );
-
-        $definition = new Definition('Assimtech\Dislog\ApiCallLogger', $arguments);
-
-        $container->setDefinition('assimtech_dislog.logger', $definition);
+        $container
+            ->register('assimtech_dislog.logger', 'Assimtech\Dislog\ApiCallLogger')
+            ->setArguments(array(
+                new Reference('assimtech_dislog.api_call.factory'),
+                new Reference('assimtech_dislog.handler'),
+                $config['preferences'],
+                new Reference($config['psr_logger'], ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+            ))
+        ;
 
         return $this;
     }

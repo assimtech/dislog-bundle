@@ -57,9 +57,9 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                     ->validate()
-                    ->ifTrue(function ($v) {
-                        return count($v) !== 1;
-                    })
+                        ->ifTrue(function ($v) {
+                            return count($v) !== 1;
+                        })
                         ->thenInvalid('A single handler section must be configured')
                     ->end()
                 ->end()

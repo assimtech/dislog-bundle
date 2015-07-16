@@ -5,11 +5,14 @@ namespace spec\Assimtech\DislogBundle\DependencyInjection;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 
 class AssimtechDislogExtensionSpec extends ObjectBehavior
 {
-    private function setupContainer(ContainerBuilder $container)
+    private function setupForLoad(ContainerBuilder $container)
     {
         $container->addResource(
             Argument::type('Symfony\Component\Config\Resource\FileResource')
@@ -54,11 +57,25 @@ class AssimtechDislogExtensionSpec extends ObjectBehavior
             'assimtech_dislog.serializer.string',
             Argument::type('Symfony\Component\DependencyInjection\Definition')
         )->shouldBeCalled();
+    }
 
-        $container->setDefinition(
-            'assimtech_dislog.logger',
-            Argument::type('Symfony\Component\DependencyInjection\Definition')
-        )->shouldBeCalled();
+    private function setupForLogger(
+        ContainerBuilder $container,
+        Definition $loggerDefinition
+    ) {
+        $container
+            ->register('assimtech_dislog.logger', 'Assimtech\Dislog\ApiCallLogger')
+            ->willReturn($loggerDefinition)
+        ;
+
+        $loggerDefinition->setArguments(array(
+            new Reference('assimtech_dislog.api_call.factory'),
+            new Reference('assimtech_dislog.handler'),
+            array(
+                'suppressHandlerExceptions' => false,
+            ),
+            new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+        ))->shouldBeCalled();
     }
 
     function it_is_initializable()
@@ -86,20 +103,32 @@ class AssimtechDislogExtensionSpec extends ObjectBehavior
         ;
     }
 
-    function it_can_load_stream(ContainerBuilder $container)
-    {
-        $this->setupContainer($container);
+    function it_can_load_stream(
+        ContainerBuilder $container,
+        Definition $handlerDefinition,
+        Definition $loggerDefinition
+    ) {
+        $resource = 'php://temp';
 
-        $container->setDefinition(
-            'assimtech_dislog.handler',
-            Argument::type('Symfony\Component\DependencyInjection\Definition')
-        )->shouldBeCalled();
+        $this->setupForLoad($container);
+        $this->setupForLogger($container, $loggerDefinition);
+
+        $container
+            ->register('assimtech_dislog.handler', 'Assimtech\Dislog\Handler\Stream')
+            ->willReturn($handlerDefinition)
+        ;
+
+        $handlerDefinition->setArguments(array(
+            $resource,
+            new Reference('assimtech_dislog.generator.unique_id'),
+            new Reference('assimtech_dislog.serializer.string'),
+        ))->shouldBeCalled();
 
         $configs = array(
             'assimtech_dislog' => array(
                 'handler' => array(
                     'stream' => array(
-                        'resource' => 'php://temp',
+                        'resource' => $resource,
                     ),
                 ),
             ),
@@ -108,20 +137,29 @@ class AssimtechDislogExtensionSpec extends ObjectBehavior
         $this->load($configs, $container);
     }
 
-    function it_can_load_doctrine_object_manager(ContainerBuilder $container)
-    {
-        $this->setupContainer($container);
+    function it_can_load_doctrine_object_manager(
+        ContainerBuilder $container,
+        Definition $handlerDefinition,
+        Definition $loggerDefinition
+    ) {
+        $objectManager = 'doctrine.object.mnager';
 
-        $container->setDefinition(
-            'assimtech_dislog.handler',
-            Argument::type('Symfony\Component\DependencyInjection\Definition')
-        )->shouldBeCalled();
+        $this->setupForLoad($container);
+        $this->setupForLogger($container, $loggerDefinition);
+
+        $container
+            ->register('assimtech_dislog.handler', 'Assimtech\Dislog\Handler\DoctrineObjectManager')
+            ->willReturn($handlerDefinition)
+        ;
+        $handlerDefinition->setArguments(array(
+            new Reference($objectManager),
+        ))->shouldBeCalled();
 
         $configs = array(
             'assimtech_dislog' => array(
                 'handler' => array(
                     'doctrine_object_manager' => array(
-                        'object_manager' => 'doctrine.object.mnager',
+                        'object_manager' => $objectManager,
                     ),
                 ),
             ),
@@ -130,11 +168,14 @@ class AssimtechDislogExtensionSpec extends ObjectBehavior
         $this->load($configs, $container);
     }
 
-    function it_can_load_service(ContainerBuilder $container)
-    {
-        $this->setupContainer($container);
-
+    function it_can_load_service(
+        ContainerBuilder $container,
+        Definition $loggerDefinition
+    ) {
         $serviceName = 'my.service';
+
+        $this->setupForLoad($container);
+        $this->setupForLogger($container, $loggerDefinition);
 
         $container->setAlias('assimtech_dislog.handler', $serviceName)->shouldBeCalled();
 

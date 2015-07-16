@@ -70,6 +70,23 @@ assimtech_dislog:
 For more advanced setups please see [DoctrineMongoDBBundle Configuration](http://symfony.com/doc/current/bundles/DoctrineMongoDBBundle/config.html)
 
 
+## Aliased Processors
+
+[Aliased processors](https://github.com/assimtech/dislog/blob/master/README.md#processors) can be automatically
+registered with the `ApiCallLogger` by tagging them with:
+
+```yaml
+my_bundle.my_service.dislog_processor.my_processor:
+    public: false
+    class: %assimtech_dislog.processor.regex_replace.class%
+    arguments:
+        - "/password=([\w]{2})[\w]+([\w]{2})/"
+        - "password=$1***$2"
+    tags:
+        - { name: assimtech_dislog.processor, alias: my_service.password }
+```
+
+
 ## Configuration reference
 
 ```yaml
