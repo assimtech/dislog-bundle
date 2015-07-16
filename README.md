@@ -72,7 +72,7 @@ For more advanced setups please see [DoctrineMongoDBBundle Configuration](http:/
 
 ## Aliased Processors
 
-[Aliased processors](https://github.com/assimtech/dislog/blob/master/README.md#processors) can be automatically
+[Aliased processors](https://github.com/assimtech/dislog/blob/master/README.md#aliasing-processors) can be automatically
 registered with the `ApiCallLogger` by tagging them with:
 
 ```yaml
