@@ -73,7 +73,7 @@ For more advanced setups please see [DoctrineMongoDBBundle Configuration](http:/
 ## Aliased Processors
 
 [Aliased processors](https://github.com/assimtech/dislog/blob/master/README.md#aliasing-processors) can be automatically
-registered with the `ApiCallLogger` by tagging them with:
+registered with the `ApiCallLogger` by tagging them with `name: assimtech_dislog.processor` and an `alias`:
 
 ```yaml
 my_bundle.my_service.dislog_processor.my_processor:
@@ -84,6 +84,20 @@ my_bundle.my_service.dislog_processor.my_processor:
         - "password=$1***$2"
     tags:
         - { name: assimtech_dislog.processor, alias: my_service.password }
+```
+
+The above processor could then be used by simply referencing the alias `my_service.password`:
+
+```php
+$apiCallLogger->logRequest(
+    $request,
+    $endpoint,
+    $method,
+    $reference,
+    array(
+        'my_service.password',
+    )
+);
 ```
 
 
