@@ -67,7 +67,7 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->booleanNode('suppressHandlerExceptions')
-                            ->defaultFalse()
+                            ->defaultTrue()
                         ->end()
                     ->end()
                 ->end()

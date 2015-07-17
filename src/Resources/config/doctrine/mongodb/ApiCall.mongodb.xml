@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<doctrine-mongo-mapping xmlns="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping"
+<doctrine-mongo-mapping
+    xmlns="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping
     http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd"
 >
-    <document name="Assimtech\Dislog\ApiCall" collection="api_call">
+    <document
+        name="Assimtech\Dislog\ApiCall"
+        collection="api_call"
+    >
         <indexes>
-            <index columns="endpoint" />
-            <index columns="method" />
-            <index columns="reference" />
-            <index columns="request_time" />
-            <index columns="request_datetime" />
+            <index>
+                <key name="request_datetime" />
+                <option name="expireAfterSeconds" value="2592000" />
+            </index>
         </indexes>
 
         <field fieldName="id" id="true" />
 
-        <field fieldName="endpoint" type="string" />
-        <field fieldName="method" type="string" />
-        <field fieldName="reference" type="string" nullable="true" />
-        <field fieldName="requestTime" name="request_time" type="float" />
+        <field fieldName="endpoint" type="string" index="true" />
+        <field fieldName="method" type="string" index="true" />
+        <field fieldName="reference" type="string" nullable="true" index="true" />
+        <field fieldName="requestTime" name="request_time" type="float" index="true" />
         <field fieldName="requestDateTime" name="request_datetime" type="date" />
         <field fieldName="duration" type="float" nullable="true" />
         <field fieldName="request" type="string" nullable="true" />

@@ -72,7 +72,7 @@ class AssimtechDislogExtensionSpec extends ObjectBehavior
             new Reference('assimtech_dislog.api_call.factory'),
             new Reference('assimtech_dislog.handler'),
             array(
-                'suppressHandlerExceptions' => false,
+                'suppressHandlerExceptions' => true,
             ),
             new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
         ))->shouldBeCalled();
