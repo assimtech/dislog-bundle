@@ -1,8 +1,59 @@
-# Dislog Bundle
+# DislogBundle
 
+[![Latest Stable Version](https://poser.pugx.org/assimtech/dislog-bundle/v/stable)](https://packagist.org/packages/assimtech/dislog-bundle)
+[![Total Downloads](https://poser.pugx.org/assimtech/dislog-bundle/downloads)](https://packagist.org/packages/assimtech/dislog-bundle)
+[![Latest Unstable Version](https://poser.pugx.org/assimtech/dislog-bundle/v/unstable)](https://packagist.org/packages/assimtech/dislog-bundle)
+[![License](https://poser.pugx.org/assimtech/dislog-bundle/license)](https://packagist.org/packages/assimtech/dislog-bundle)
 [![Build Status](https://travis-ci.org/assimtech/dislog-bundle.svg?branch=master)](https://travis-ci.org/assimtech/dislog-bundle)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/assimtech/dislog-bundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/assimtech/dislog-bundle/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/assimtech/dislog-bundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/assimtech/dislog-bundle/?branch=master)
+
+Dislog Bundle provides symfony 2 integration for [assimtech/dislog](https://github.com/assimtech/dislog), an API Call logger.
+
+
+## Installation
+
+Install with composer:
+
+```shell
+composer require assimtech/dislog-bundle
+```
+
+Add the bundle to your `AppKernel`:
+
+```php
+$bundles = array(
+    /** Your other bundles */
+    new Assimtech\DislogBundle\AssimtechDislogBundle(),
+);
+```
+
+Configure at least a handler in your `config.yml`:
+
+```yaml
+assimtech_dislog:
+    handler:
+        stream:
+            resource: /tmp/my.log
+```
+
+
+Start logging your api calls:
+
+```php
+/** @var \Assimtech\Dislog\ApiCallLoggerInterface $apiCallLogger */
+$apiCallLogger = $container->get('assimtech_dislog.logger');
+
+$request = '<request />';
+
+$apiCall = $apiCallLogger->logRequest($request, $endpoint, $method, $reference);
+
+$response = $api->transmit($request);
+
+$this->apiCallLogger->logResponse($apiCall, $response);
+```
+
+See [assimtech/dislog](https://github.com/assimtech/dislog) for more advanced usage.
 
 
 ## Handler configuration
@@ -100,6 +151,77 @@ $apiCallLogger->logRequest(
 );
 ```
 
+
+Note: Adding aliased processors using the above method will result in all tagged processors being registered whenever the api call logger is constructed regardless of which api service is actually being used. If you believe this is wasteful you could instead use a factory for your api call service which constructs the relevant processors and registers them with the api call logger only when your api service is being used.
+
+```php
+use Assimtech\Dislog\ApiCallLogger;
+
+class MyApiFactory
+{
+    /**
+     * @var ApiCallLogger $apiCallLogger
+     */
+    private $apiCallLogger;
+
+    /**
+     * @var callable[] $dislogProcessors
+     * Associative array of callable
+     *      array(
+     *          'my_api.replace_password' => $passwordProcessor,
+     *          'my_api.replace_secret' => $secretProcessor,
+     *      )
+     */
+    private $dislogProcessors;
+
+    public function __construct(ApiCallLogger $apiCallLogger, array $dislogProcessors)
+    {
+        $this->apiCallLogger = $apiCallLogger;
+        $this->dislogProcessors = $dislogProcessors;
+    }
+
+    public function create()
+    {
+        // Add processors to API Call Logger
+        foreach ($this->dislogProcessors as $alias => $dislogProcessor) {
+            $this->apiCallLogger->setAliasedProcessor($alias, $dislogProcessor);
+        }
+
+        // Construct MyApi however it needs to be constructed
+        return new MyApi($this->apiCallLogger);
+    }
+}
+```
+
+```yaml
+services:
+    my_api.factory:
+        public: false
+        class: MyApiFactory
+        arguments:
+            - "@assimtech_dislog.logger"
+            -
+                my_api.replace_password:    @my_api.replace_password
+                my_api.replace_secret:      @my_api.replace_secret
+
+    my_api.replace_password:
+        public: false
+        class: %assimtech_dislog.processor.regex_replace.class%
+        arguments:
+            - "/password=([\w]{2})[\w]+([\w]{2})/"
+            - "password=$1***$2"
+
+    my_api.replace_secret:
+        public: false
+        class: %assimtech_dislog.processor.string_replace.class%
+        arguments:
+            - %my_api.secret%
+            - "***"
+
+    my_api:
+        class:   MyApi
+        factory: ["@my_api.factory", create]
+```
 
 ## Configuration reference
 
