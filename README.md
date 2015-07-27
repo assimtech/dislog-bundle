@@ -36,6 +36,7 @@ doctrine:
                 mappings:
                     AssimtechDislogBundle:
                         type: xml
+                        prefix: Assimtech\Dislog\Model
                         dir: Resources/config/doctrine/orm
 
 assimtech_dislog:

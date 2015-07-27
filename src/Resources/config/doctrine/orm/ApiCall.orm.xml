@@ -4,7 +4,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd"
 >
-    <entity name="Assimtech\DislogBundle\Entity\ApiCall" table="api_call">
+    <entity name="Assimtech\Dislog\Model\ApiCall" table="api_call">
         <indexes>
             <index columns="endpoint" />
             <index columns="method" />
