@@ -6,7 +6,7 @@
     http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd"
 >
     <document
-        name="Assimtech\DislogBundle\Entity\ApiCall"
+        name="Assimtech\DislogBundle\Document\ApiCall"
         collection="api_call"
     >
         <indexes>

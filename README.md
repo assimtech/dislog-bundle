@@ -21,7 +21,7 @@ assimtech_dislog:
 
 The doctrine mapping definitions included with the bundle are placed in non-default paths intentionally to prevent automapping from accidently loading into the wrong object manager.
 
-E.g. If you have an application which uses both DoctrineORM (for your normal application entities) as well as DoctrineMongoDB (for Dislog) we don't want DoctrineORM to dectect and load the mapping information from DislogBundle's ApiCall.orm.xml. If it did, you may end up with a table being created if you also use `doctrine:schema:update` or Doctrine Migrations.
+E.g. If you have an application which uses both DoctrineORM (for your normal application entities) as well as DoctrineMongoDB (for Dislog) we don't want DoctrineORM to detect and load the mapping information from DislogBundle's ApiCall.orm.xml. If it did, you may end up with a table being created if you also use `doctrine:schema:update` or Doctrine Migrations.
 
 This means mapping information for Dislog must be loaded manually.
 
@@ -36,7 +36,6 @@ doctrine:
                 mappings:
                     AssimtechDislogBundle:
                         type: xml
-                        prefix: Assimtech\Dislog
                         dir: Resources/config/doctrine/orm
 
 assimtech_dislog:
@@ -58,7 +57,6 @@ doctrine_mongodb:
             mappings:
                 AssimtechDislogBundle:
                     type: xml
-                    prefix: Assimtech\Dislog
                     dir: Resources/config/doctrine/mongodb
 
 assimtech_dislog:
