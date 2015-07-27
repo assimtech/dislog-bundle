@@ -28,7 +28,7 @@ $bundles = array(
 );
 ```
 
-Configure at least a handler in your `config.yml`:
+Configure the [handler](#handler-configuration) in your `config.yml`:
 
 ```yaml
 assimtech_dislog:
