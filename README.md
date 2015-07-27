@@ -152,7 +152,9 @@ $apiCallLogger->logRequest(
 ```
 
 
-Note: Adding aliased processors using the above method will result in all tagged processors being registered whenever the api call logger is constructed regardless of which api service is actually being used. If you believe this is wasteful you could instead use a factory for your api call service which constructs the relevant processors and registers them with the api call logger only when your api service is being used.
+### Aliasing processors on demand using a factory
+
+Adding aliased processors using the above method will result in all tagged processors being registered whenever the api call logger is constructed regardless of which api service is actually being used. Typically only one api is used in a single request. This means we only really want to construct and alias a subset of the available processors for an api when it is required. We can limit which processors are loaded into the `ApiCallLogger` by using a service factory.
 
 ```php
 use Assimtech\Dislog\ApiCallLogger;
