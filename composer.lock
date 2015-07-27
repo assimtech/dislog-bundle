@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e12d7cd0b19972d2fde3cddf2549b5ca",
+    "hash": "18a65fc6ced0e153b6e0e2efa4f70548",
     "packages": [
         {
             "name": "assimtech/dislog",
-            "version": "1.0.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/assimtech/dislog.git",
-                "reference": "af7f1b7a12205de70114b61f40416ee4c0963f83"
+                "reference": "216a351398d3e96b8d377d301a00f5c43ae77e50"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/assimtech/dislog/zipball/af7f1b7a12205de70114b61f40416ee4c0963f83",
-                "reference": "af7f1b7a12205de70114b61f40416ee4c0963f83",
+                "url": "https://api.github.com/repos/assimtech/dislog/zipball/216a351398d3e96b8d377d301a00f5c43ae77e50",
+                "reference": "216a351398d3e96b8d377d301a00f5c43ae77e50",
                 "shasum": ""
             },
             "require": {
@@ -45,7 +45,7 @@
             ],
             "description": "API call logger",
             "homepage": "https://github.com/assimtech/dislog",
-            "time": "2015-07-16 00:31:03"
+            "time": "2015-07-27 00:44:29"
         },
         {
             "name": "psr/log",
@@ -1939,7 +1939,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "assimtech/dislog": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
