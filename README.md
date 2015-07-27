@@ -58,6 +58,7 @@ doctrine_mongodb:
             mappings:
                 AssimtechDislogBundle:
                     type: xml
+                    prefix: Assimtech\Dislog\Model
                     dir: Resources/config/doctrine/mongodb
 
 assimtech_dislog:
