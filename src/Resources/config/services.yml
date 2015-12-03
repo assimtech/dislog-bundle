@@ -11,10 +11,10 @@ parameters:
 
 services:
     assimtech_dislog.api_call.factory:
-        class: %assimtech_dislog.api_call.factory.class%
+        class: "%assimtech_dislog.api_call.factory.class%"
 
     assimtech_dislog.generator.unique_id:
-        class: %assimtech_dislog.generator.unique_id.class%
+        class: "%assimtech_dislog.generator.unique_id.class%"
 
     assimtech_dislog.serializer.string:
-        class: %assimtech_dislog.serializer.string.class%
+        class: "%assimtech_dislog.serializer.string.class%"
