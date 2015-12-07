@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e12d7cd0b19972d2fde3cddf2549b5ca",
-    "content-hash": "323c67eba91e94f40d32a0d3376a7552",
+    "hash": "bc07f9545caadb56c13d5a926dadc825",
+    "content-hash": "1fbe00c3876b8aa705fc6668d030bc47",
     "packages": [
         {
             "name": "assimtech/dislog",
@@ -2009,7 +2009,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.3.3"
+        "php": ">=5.5.9"
     },
     "platform-dev": []
 }
