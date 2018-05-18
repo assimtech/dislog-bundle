@@ -76,6 +76,8 @@ E.g. If you have an application which uses both DoctrineORM (for your normal app
 
 This means mapping information for Dislog must be loaded manually.
 
+**WARNING: It is advisable to avoid using your application's default object manager as a `flush()` from dislog may interfere with your application**
+
 #### Doctrine ORM
 
 An example of adding the mapping information with DoctrineBundle to the default object manager
@@ -83,7 +85,7 @@ An example of adding the mapping information with DoctrineBundle to the default 
 doctrine:
     orm:
         entity_managers:
-            default:
+            dislog:
                 mappings:
                     AssimtechDislogBundle:
                         type: xml
@@ -105,7 +107,7 @@ An example of adding the mapping information with DoctrineMongoDBBundle to the d
 ```yaml
 doctrine_mongodb:
     document_managers:
-        default:
+        dislog:
             mappings:
                 AssimtechDislogBundle:
                     type: xml

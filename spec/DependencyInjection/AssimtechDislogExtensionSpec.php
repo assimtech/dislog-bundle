@@ -14,9 +14,10 @@ class AssimtechDislogExtensionSpec extends ObjectBehavior
 {
     private function setupForLoad(ContainerBuilder $container)
     {
-        $container->addResource(
-            Argument::type('Symfony\Component\Config\Resource\FileResource')
-        )->shouldBeCalled();
+        $container
+            ->fileExists(Argument::containingString('Resources/config/services.yaml'))
+            ->willReturn(true)
+        ;
 
         $container->setParameter(
             'assimtech_dislog.api_call.factory.class',
@@ -91,6 +92,8 @@ class AssimtechDislogExtensionSpec extends ObjectBehavior
                 ),
             ),
         );
+
+        $this->setupForLoad($container);
 
         $this
             ->shouldThrow(new InvalidConfigurationException(

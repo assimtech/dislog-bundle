@@ -4,7 +4,7 @@ suites:
         psr4_prefix: Assimtech\DislogBundle
 
 extensions:
-    - PhpSpec\Extension\CodeCoverageExtension
+    LeanPHP\PhpSpec\CodeCoverage\CodeCoverageExtension: ~
 
 code_coverage:
     format:
