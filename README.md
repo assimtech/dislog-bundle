@@ -34,7 +34,7 @@ Configure the [handler](#handler-configuration) in your `config.yml`:
 assimtech_dislog:
     handler:
         stream:
-            resource: /tmp/my.log
+            resource: '/tmp/my.log'
 ```
 
 
@@ -42,7 +42,7 @@ Start logging your api calls:
 
 ```php
 /** @var \Assimtech\Dislog\ApiCallLoggerInterface $apiCallLogger */
-$apiCallLogger = $container->get('assimtech_dislog.logger');
+$apiCallLogger = $container->get('Assimtech\Dislog\ApiCallLoggerInterface');
 
 $request = '<request />';
 
@@ -131,7 +131,7 @@ registered with the `ApiCallLogger` by tagging them with `name: assimtech_dislog
 ```yaml
 my_bundle.my_service.dislog_processor.my_processor:
     public: false
-    class: %assimtech_dislog.processor.regex_replace.class%
+    class: '%assimtech_dislog.processor.regex_replace.class%'
     arguments:
         - "/password=([\w]{2})[\w]+([\w]{2})/"
         - "password=$1***$2"
@@ -199,47 +199,46 @@ class MyApiFactory
 
 ```yaml
 services:
-    my_api.factory:
+    MyApiFactory:
         public: false
-        class: MyApiFactory
         arguments:
-            - "@assimtech_dislog.logger"
+            - '@assimtech_dislog.logger'
             -
-                my_api.replace_password:    @my_api.replace_password
-                my_api.replace_secret:      @my_api.replace_secret
+                my_api.replace_password:    '@my_api.replace_password'
+                my_api.replace_secret:      '@my_api.replace_secret'
 
     my_api.replace_password:
         public: false
-        class: %assimtech_dislog.processor.regex_replace.class%
+        class: '%assimtech_dislog.processor.regex_replace.class%'
         arguments:
-            - "/password=([\w]{2})[\w]+([\w]{2})/"
-            - "password=$1***$2"
+            - '/password=([\w]{2})[\w]+([\w]{2})/'
+            - 'password=$1***$2'
 
     my_api.replace_secret:
         public: false
-        class: %assimtech_dislog.processor.string_replace.class%
+        class: '%assimtech_dislog.processor.string_replace.class%'
         arguments:
-            - %my_api.secret%
-            - "***"
+            - '%my_api.secret%'
+            - '***'
 
-    my_api:
+    MyApi:
         class:   MyApi
-        factory: ["@my_api.factory", create]
+        factory: ['@my_api.factory', create]
 ```
 
 ## Configuration reference
 
 ```yaml
 assimtech_dislog:
-    api_call_factory: assimtech_dislog.api_call.factory # Api Call Factory service name
+    api_call_factory: Assimtech\Dislog\Factory\ApiCallFactory # Api Call Factory service name
 
     handler:
         # *One* of the following sections must be configured, none are enable by default
 
         stream:
             resource: ~ # Either a stream path ("/tmp/my.log", "php://stdout") or a stream resource (see fopen)
-            identity_generator: assimtech_dislog.generator.unique_id # Identity Generator service name
-            serializer: assimtech_dislog.serializer.string # Serializer service name
+            identity_generator: Assimtech\Dislog\Identity\UniqueIdGenerator # Identity Generator service name
+            serializer: Assimtech\Dislog\Serializer\StringSerializer # Serializer service name
 
         doctrine_object_manager:
             object_manager: ~ # Object manager service name

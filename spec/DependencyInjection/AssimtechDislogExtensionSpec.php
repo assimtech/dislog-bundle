@@ -45,18 +45,33 @@ class AssimtechDislogExtensionSpec extends ObjectBehavior
         )->shouldBeCalled();
 
         $container->setDefinition(
+            'Assimtech\Dislog\Factory\ApiCallFactory',
+            Argument::type('Symfony\Component\DependencyInjection\Definition')
+        )->shouldBeCalled();
+
+        $container->setAlias(
             'assimtech_dislog.api_call.factory',
-            Argument::type('Symfony\Component\DependencyInjection\Definition')
+            'Assimtech\Dislog\Factory\ApiCallFactory'
         )->shouldBeCalled();
 
         $container->setDefinition(
+            'Assimtech\Dislog\Identity\UniqueIdGenerator',
+            Argument::type('Symfony\Component\DependencyInjection\Definition')
+        )->shouldBeCalled();
+
+        $container->setAlias(
             'assimtech_dislog.generator.unique_id',
-            Argument::type('Symfony\Component\DependencyInjection\Definition')
+            'Assimtech\Dislog\Identity\UniqueIdGenerator'
         )->shouldBeCalled();
 
         $container->setDefinition(
-            'assimtech_dislog.serializer.string',
+            'Assimtech\Dislog\Serializer\StringSerializer',
             Argument::type('Symfony\Component\DependencyInjection\Definition')
+        )->shouldBeCalled();
+
+        $container->setAlias(
+            'assimtech_dislog.serializer.string',
+            'Assimtech\Dislog\Serializer\StringSerializer'
         )->shouldBeCalled();
     }
 
@@ -65,18 +80,23 @@ class AssimtechDislogExtensionSpec extends ObjectBehavior
         Definition $loggerDefinition
     ) {
         $container
-            ->register('assimtech_dislog.logger', 'Assimtech\Dislog\ApiCallLogger')
+            ->register('Assimtech\Dislog\ApiCallLoggerInterface', 'Assimtech\Dislog\ApiCallLogger')
             ->willReturn($loggerDefinition)
         ;
 
         $loggerDefinition->setArguments(array(
-            new Reference('assimtech_dislog.api_call.factory'),
-            new Reference('assimtech_dislog.handler'),
+            new Reference('Assimtech\Dislog\Factory\ApiCallFactory'),
+            new Reference('Assimtech\Dislog\Handler\HandlerInterface'),
             array(
                 'suppressHandlerExceptions' => true,
             ),
             new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
         ))->shouldBeCalled();
+
+        $container->setAlias(
+            'assimtech_dislog.logger',
+            'Assimtech\Dislog\ApiCallLoggerInterface'
+        )->shouldBeCalled();
     }
 
     function it_is_initializable()
@@ -117,14 +137,14 @@ class AssimtechDislogExtensionSpec extends ObjectBehavior
         $this->setupForLogger($container, $loggerDefinition);
 
         $container
-            ->register('assimtech_dislog.handler', 'Assimtech\Dislog\Handler\Stream')
+            ->register('Assimtech\Dislog\Handler\HandlerInterface', 'Assimtech\Dislog\Handler\Stream')
             ->willReturn($handlerDefinition)
         ;
 
         $handlerDefinition->setArguments(array(
             $resource,
-            new Reference('assimtech_dislog.generator.unique_id'),
-            new Reference('assimtech_dislog.serializer.string'),
+            new Reference('Assimtech\Dislog\Identity\UniqueIdGenerator'),
+            new Reference('Assimtech\Dislog\Serializer\StringSerializer'),
         ))->shouldBeCalled();
 
         $configs = array(
@@ -151,7 +171,7 @@ class AssimtechDislogExtensionSpec extends ObjectBehavior
         $this->setupForLogger($container, $loggerDefinition);
 
         $container
-            ->register('assimtech_dislog.handler', 'Assimtech\Dislog\Handler\DoctrineObjectManager')
+            ->register('Assimtech\Dislog\Handler\HandlerInterface', 'Assimtech\Dislog\Handler\DoctrineObjectManager')
             ->willReturn($handlerDefinition)
         ;
         $handlerDefinition->setArguments(array(
@@ -180,7 +200,7 @@ class AssimtechDislogExtensionSpec extends ObjectBehavior
         $this->setupForLoad($container);
         $this->setupForLogger($container, $loggerDefinition);
 
-        $container->setAlias('assimtech_dislog.handler', $serviceName)->shouldBeCalled();
+        $container->setAlias('Assimtech\Dislog\Handler\HandlerInterface', $serviceName)->shouldBeCalled();
 
         $configs = array(
             'assimtech_dislog' => array(
