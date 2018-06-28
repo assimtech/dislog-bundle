@@ -95,7 +95,7 @@ doctrine:
 assimtech_dislog:
     handler:
         doctrine_object_manager:
-            object_manager: doctrine.orm.entity_manager
+            object_manager: doctrine.orm.dislog_entity_manager
 ```
 
 For more advanced setups please see [DoctrineBundle Configuration](http://symfony.com/doc/master/bundles/DoctrineBundle/configuration.html)
@@ -117,7 +117,7 @@ doctrine_mongodb:
 assimtech_dislog:
     handler:
         doctrine_object_manager:
-            object_manager: doctrine_mongodb.odm.default_document_manager
+            object_manager: doctrine_mongodb.odm.dislog_document_manager
 ```
 
 For more advanced setups please see [DoctrineMongoDBBundle Configuration](http://symfony.com/doc/current/bundles/DoctrineMongoDBBundle/config.html)
@@ -133,8 +133,8 @@ my_bundle.my_service.dislog_processor.my_processor:
     public: false
     class: '%assimtech_dislog.processor.regex_replace.class%'
     arguments:
-        - "/password=([\w]{2})[\w]+([\w]{2})/"
-        - "password=$1***$2"
+        - '/password=([\w]{2})[\w]+([\w]{2})/'
+        - 'password=$1***$2'
     tags:
         - { name: assimtech_dislog.processor, alias: my_service.password }
 ```
