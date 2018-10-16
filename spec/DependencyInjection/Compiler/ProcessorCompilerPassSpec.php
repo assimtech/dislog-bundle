@@ -20,7 +20,7 @@ class ProcessorCompilerPassSpec extends ObjectBehavior
         $alias = 'my.processor';
         $serviceId = 'my_bundle.dislog_processor';
 
-        $container->getDefinition('Assimtech\Dislog\ApiCallLoggerInterface')->willReturn($loggerDefinition);
+        $container->getDefinition('assimtech_dislog.logger')->willReturn($loggerDefinition);
 
         $taggedServices = array(
             $serviceId => array(
