@@ -130,8 +130,7 @@ registered with the `ApiCallLogger` by tagging them with `name: assimtech_dislog
 
 ```yaml
 my_bundle.my_service.dislog_processor.my_processor:
-    public: false
-    class: '%assimtech_dislog.processor.regex_replace.class%'
+    class: 'Assimtech\Dislog\Processor\RegexReplace'
     arguments:
         - '/password=([\w]{2})[\w]+([\w]{2})/'
         - 'password=$1***$2'
@@ -209,14 +208,14 @@ services:
 
     my_api.replace_password:
         public: false
-        class: '%assimtech_dislog.processor.regex_replace.class%'
+        class: 'Assimtech\Dislog\Processor\RegexReplace'
         arguments:
             - '/password=([\w]{2})[\w]+([\w]{2})/'
             - 'password=$1***$2'
 
     my_api.replace_secret:
         public: false
-        class: '%assimtech_dislog.processor.string_replace.class%'
+        class: 'Assimtech\Dislog\Processor\StringReplace'
         arguments:
             - '%my_api.secret%'
             - '***'
@@ -230,7 +229,7 @@ services:
 
 ```yaml
 assimtech_dislog:
-    api_call_factory: Assimtech\Dislog\Factory\ApiCallFactory # Api Call Factory service name
+    api_call_factory: assimtech_dislog.api_call.factory # Api Call Factory service name
 
     handler:
         # *One* of the following sections must be configured, none are enable by default
