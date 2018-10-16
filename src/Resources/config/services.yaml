@@ -1,20 +1,12 @@
-parameters:
-    assimtech_dislog.api_call.factory.class: Assimtech\Dislog\Factory\ApiCallFactory
-
-    assimtech_dislog.generator.unique_id.class: Assimtech\Dislog\Identity\UniqueIdGenerator
-
-    assimtech_dislog.serializer.string.class: Assimtech\Dislog\Serializer\StringSerializer
-
-    assimtech_dislog.processor.regex_replace.class: Assimtech\Dislog\Processor\RegexReplace
-    assimtech_dislog.processor.string_replace.class: Assimtech\Dislog\Processor\StringReplace
-
-
 services:
-    Assimtech\Dislog\Factory\ApiCallFactory: ~
-    assimtech_dislog.api_call.factory: '@Assimtech\Dislog\Factory\ApiCallFactory'
+    assimtech_dislog.api_call.factory:
+        class: Assimtech\Dislog\Factory\ApiCallFactory
+    Assimtech\Dislog\Factory\ApiCallFactory: '@assimtech_dislog.api_call.factory'
 
-    Assimtech\Dislog\Identity\UniqueIdGenerator: ~
-    assimtech_dislog.generator.unique_id: '@Assimtech\Dislog\Identity\UniqueIdGenerator'
+    assimtech_dislog.generator.unique_id:
+        class: Assimtech\Dislog\Identity\UniqueIdGenerator
+    Assimtech\Dislog\Identity\UniqueIdGenerator: '@assimtech_dislog.generator.unique_id'
 
-    Assimtech\Dislog\Serializer\StringSerializer: ~
-    assimtech_dislog.serializer.string: '@Assimtech\Dislog\Serializer\StringSerializer'
+    assimtech_dislog.serializer.string:
+        class: Assimtech\Dislog\Serializer\StringSerializer
+    Assimtech\Dislog\Serializer\StringSerializer: '@assimtech_dislog.serializer.string'

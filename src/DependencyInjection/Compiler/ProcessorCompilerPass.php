@@ -14,7 +14,7 @@ class ProcessorCompilerPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         $loggerDefinition = $container->getDefinition(
-            'Assimtech\Dislog\ApiCallLoggerInterface'
+            'assimtech_dislog.logger'
         );
 
         $taggedServices = $container->findTaggedServiceIds(

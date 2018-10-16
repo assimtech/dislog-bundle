@@ -2,15 +2,20 @@
 
 namespace Assimtech\DislogBundle\DependencyInjection;
 
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Assimtech\Dislog;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class AssimtechDislogExtension extends Extension
 {
+    const API_CALL_FACTORY_ID = 'assimtech_dislog.api_call.factory';
+    const HANDLER_ID = 'assimtech_dislog.handler';
+    const LOGGER_ID = 'assimtech_dislog.logger';
+
     public function load(array $configs, ContainerBuilder $container)
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
@@ -27,8 +32,6 @@ class AssimtechDislogExtension extends Extension
 
     protected function createHandlerDefinition($config, ContainerBuilder $container)
     {
-        $handlerServiceId = 'Assimtech\Dislog\Handler\HandlerInterface';
-
         $handlers = array_keys($config['handler']);
         $handlerType = $handlers[0];
         $handlerConfig = $config['handler'][$handlerType];
@@ -36,7 +39,7 @@ class AssimtechDislogExtension extends Extension
         switch ($handlerType) {
             case 'stream':
                 $container
-                    ->register($handlerServiceId, 'Assimtech\Dislog\Handler\Stream')
+                    ->register(self::HANDLER_ID, Dislog\Handler\Stream::class)
                     ->setArguments(array(
                         $handlerConfig['resource'],
                         new Reference($handlerConfig['identity_generator']),
@@ -46,7 +49,7 @@ class AssimtechDislogExtension extends Extension
                 break;
             case 'doctrine_object_manager':
                 $container
-                    ->register($handlerServiceId, 'Assimtech\Dislog\Handler\DoctrineObjectManager')
+                    ->register(self::HANDLER_ID, Dislog\Handler\DoctrineObjectManager::class)
                     ->setArguments(array(
                         new Reference($handlerConfig['object_manager']),
                     ))
@@ -54,11 +57,13 @@ class AssimtechDislogExtension extends Extension
                 break;
             case 'service':
                 $container->setAlias(
-                    $handlerServiceId,
+                    self::HANDLER_ID,
                     $handlerConfig['name']
                 );
                 break;
         }
+
+        $container->setAlias(Dislog\Handler\HandlerInterface::class, self::HANDLER_ID);
 
         return $this;
     }
@@ -66,19 +71,16 @@ class AssimtechDislogExtension extends Extension
     protected function createLoggerDefinition($config, ContainerBuilder $container)
     {
         $container
-            ->register('Assimtech\Dislog\ApiCallLoggerInterface', 'Assimtech\Dislog\ApiCallLogger')
+            ->register(self::LOGGER_ID, Dislog\ApiCallLogger::class)
             ->setArguments(array(
-                new Reference('Assimtech\Dislog\Factory\ApiCallFactory'),
-                new Reference('Assimtech\Dislog\Handler\HandlerInterface'),
+                new Reference(self::API_CALL_FACTORY_ID),
+                new Reference(self::HANDLER_ID),
                 $config['preferences'],
                 new Reference($config['psr_logger'], ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
             ))
         ;
 
-        // Register symfony 2.x / 3.x style service alias
-        $container
-            ->setAlias('assimtech_dislog.logger', 'Assimtech\Dislog\ApiCallLoggerInterface')
-        ;
+        $container->setAlias(Dislog\ApiCallLoggerInterface::class, self::LOGGER_ID);
 
         return $this;
     }
