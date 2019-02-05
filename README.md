@@ -19,16 +19,9 @@ Install with composer:
 composer require assimtech/dislog-bundle
 ```
 
-Add the bundle to your `AppKernel`:
+Enable the bundle `Assimtech\DislogBundle\AssimtechDislogBundle`.
 
-```php
-$bundles = array(
-    /** Your other bundles */
-    new Assimtech\DislogBundle\AssimtechDislogBundle(),
-);
-```
-
-Configure the [handler](#handler-configuration) in your `config.yml`:
+Configure the [handler](#handler-configuration):
 
 ```yaml
 assimtech_dislog:
@@ -41,11 +34,9 @@ assimtech_dislog:
 Start logging your api calls:
 
 ```php
-/** @var \Assimtech\Dislog\ApiCallLoggerInterface $apiCallLogger */
-$apiCallLogger = $container->get('Assimtech\Dislog\ApiCallLoggerInterface');
-
 $request = '<request />';
 
+/** @var \Assimtech\Dislog\ApiCallLoggerInterface $apiCallLogger */
 $apiCall = $apiCallLogger->logRequest($request, $endpoint, $method, $reference);
 
 $response = $api->transmit($request);
@@ -80,12 +71,15 @@ This means mapping information for Dislog must be loaded manually.
 
 #### Doctrine ORM
 
-An example of adding the mapping information with DoctrineBundle to the default object manager
+An example of adding the mapping information with DoctrineBundle
 ```yaml
 doctrine:
     orm:
         entity_managers:
+            default:
+                # Your main application entity manager config
             dislog:
+                connection: default
                 mappings:
                     AssimtechDislogBundle:
                         type: xml
@@ -103,11 +97,14 @@ For more advanced setups please see [DoctrineBundle Configuration](http://symfon
 
 #### Doctrine MongoDB
 
-An example of adding the mapping information with DoctrineMongoDBBundle to the default document manager
+An example of adding the mapping information with DoctrineMongoDBBundle
 ```yaml
 doctrine_mongodb:
     document_managers:
+        default:
+            # Your main application document manager config
         dislog:
+            connection: default
             mappings:
                 AssimtechDislogBundle:
                     type: xml
