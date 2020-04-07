@@ -1,4 +1,0 @@
-suites:
-    AssimtechDislogBundle:
-        namespace: Assimtech\DislogBundle
-        psr4_prefix: Assimtech\DislogBundle

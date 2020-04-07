@@ -3,6 +3,13 @@ services:
         class: Assimtech\Dislog\Factory\ApiCallFactory
     Assimtech\Dislog\Factory\ApiCallFactory: '@assimtech_dislog.api_call.factory'
 
+    assimtech_dislog.command.remove:
+        class: Assimtech\DislogBundle\Command\RemoveCommand
+        arguments:
+            $handler: '@assimtech_dislog.handler'
+        tags:
+            - { name: 'console.command' }
+
     assimtech_dislog.generator.unique_id:
         class: Assimtech\Dislog\Identity\UniqueIdGenerator
     Assimtech\Dislog\Identity\UniqueIdGenerator: '@assimtech_dislog.generator.unique_id'

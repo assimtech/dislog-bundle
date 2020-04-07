@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Assimtech\DislogBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -7,10 +9,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class Configuration implements ConfigurationInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('assimtech_dislog');
@@ -34,6 +33,24 @@ class Configuration implements ConfigurationInterface
                                 ->end()
                                 ->scalarNode('serializer')
                                     ->defaultValue('assimtech_dislog.serializer.string')
+                                ->end()
+                            ->end()
+                        ->end()
+
+                        // doctrine_document_manager options
+                        ->arrayNode('doctrine_document_manager')
+                            ->children()
+                                ->scalarNode('document_manager')
+                                    ->isRequired()
+                                ->end()
+                            ->end()
+                        ->end()
+
+                        // doctrine_entity_manager options
+                        ->arrayNode('doctrine_entity_manager')
+                            ->children()
+                                ->scalarNode('entity_manager')
+                                    ->isRequired()
                                 ->end()
                             ->end()
                         ->end()
@@ -63,10 +80,13 @@ class Configuration implements ConfigurationInterface
                         ->thenInvalid('A single handler section must be configured')
                     ->end()
                 ->end()
+                ->integerNode('max_age')
+                    ->defaultValue(60 * 60 * 24 * 30) // 30 days
+                ->end()
                 ->arrayNode('preferences')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->booleanNode('suppressHandlerExceptions')
+                        ->booleanNode('suppress_handler_exceptions')
                             ->defaultTrue()
                         ->end()
                     ->end()
