@@ -11,8 +11,11 @@ class Configuration implements ConfigurationInterface
 {
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('assimtech_dislog');
+        $treeBuilder = new TreeBuilder('assimtech_dislog');
+        $rootNode = method_exists(TreeBuilder::class, 'getRootNode')
+            ? $treeBuilder->getRootNode()
+            : $treeBuilder->root('assimtech_dislog')
+        ;
 
         $rootNode
             ->children()
