@@ -16,15 +16,15 @@
             </index>
         </indexes>
 
-        <field fieldName="id" id="true" />
+        <field field-name="id" id="true" />
 
-        <field fieldName="endpoint" type="string" index="true" />
-        <field fieldName="method" type="string" index="true" />
-        <field fieldName="reference" type="string" nullable="true" index="true" />
-        <field fieldName="requestTime" name="request_time" type="float" index="true" />
-        <field fieldName="requestDateTime" name="request_datetime" type="date" />
-        <field fieldName="duration" type="float" nullable="true" />
-        <field fieldName="request" type="string" nullable="true" />
-        <field fieldName="response" type="string" nullable="true" />
+        <field field-name="endpoint" type="string" index="true" />
+        <field field-name="method" type="string" index="true" />
+        <field field-name="reference" type="string" nullable="true" index="true" />
+        <field field-name="requestTime" name="request_time" type="float" index="true" />
+        <field field-name="requestDateTime" name="request_datetime" type="date" />
+        <field field-name="duration" type="float" nullable="true" />
+        <field field-name="request" type="string" nullable="true" />
+        <field field-name="response" type="string" nullable="true" />
     </document>
 </doctrine-mongo-mapping>
