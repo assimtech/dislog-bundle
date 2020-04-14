@@ -16,7 +16,7 @@
             </index>
         </indexes>
 
-        <field field-name="id" id="true" />
+        <id field-name="id" />
 
         <field field-name="endpoint" type="string" index="true" />
         <field field-name="method" type="string" index="true" />
