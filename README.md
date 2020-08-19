@@ -131,16 +131,19 @@ assimtech_dislog:
     handler:
         # *One* of the following sections must be configured, none are enable by default
 
-        stream:
-            resource: ~ # Either a stream path ("/tmp/my.log", "php://stdout") or a stream resource (see fopen)
-            identity_generator: Assimtech\Dislog\Identity\UniqueIdGenerator # Identity Generator service name
-            serializer: Assimtech\Dislog\Serializer\StringSerializer # Serializer service name
+        doctrine_document_manager:
+            document_manager: ~ # document manager service name
 
         doctrine_entity_manager:
             entity_manager: ~ # entity manager service name
 
         service:
             name: ~ # Your custom handler service name
+
+        stream:
+            resource: ~ # Either a stream path ("/tmp/my.log", "php://stdout") or a stream resource (see fopen)
+            identity_generator: Assimtech\Dislog\Identity\UniqueIdGenerator # Identity Generator service name
+            serializer: Assimtech\Dislog\Serializer\StringSerializer # Serializer service name
 
     preferences:
         suppress_handler_exceptions: false # By default, api call logging exceptions are suppressed (they still get emitted as warnings to the psr_logger if any)
