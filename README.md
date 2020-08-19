@@ -114,8 +114,8 @@ doctrine_mongodb:
 
 assimtech_dislog:
     handler:
-        doctrine_entity_manager:
-            entity_manager: doctrine_mongodb.odm.dislog_document_manager
+        doctrine_document_manager:
+            document_manager: doctrine_mongodb.odm.dislog_document_manager
 ```
 
 For more advanced setups please see [DoctrineMongoDBBundle Configuration](http://symfony.com/doc/current/bundles/DoctrineMongoDBBundle/config.html)
