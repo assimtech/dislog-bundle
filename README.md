@@ -52,24 +52,39 @@ bin/console assimtech:dislog:remove
 
 ## Handler configuration
 
-### Stream
+### Doctrine Object Managers
 
-```yaml
-assimtech_dislog:
-    handler:
-        stream:
-            resource: /tmp/my.log
-```
+The doctrine mapping definitions included with the bundle are placed in non-default paths intentionally to prevent automapping from accidently loading into the wrong object manager.
 
-### Doctrine Entity Manager
-
-The doctrine mapping definitions included with the bundle are placed in non-default paths intentionally to prevent automapping from accidently loading into the wrong entity manager.
-
-E.g. If you have an application which uses both DoctrineORM (for your normal application entities) as well as DoctrineMongoDB (for Dislog) we don't want DoctrineORM to detect and load the mapping information from DislogBundle's ApiCall.orm.xml. If it did, you may end up with a table being created if you also use `doctrine:schema:update` or Doctrine Migrations.
+E.g. If you have an application which uses both `Doctrine\ORM` (for your normal application entities) as well as `Doctrine\ODM` (for Dislog) we don't want `Doctrine\ORM` to detect and load the mapping information from `DislogBundle`'s `ApiCall.orm.xml`. If it did, you may end up with a table being created if you also use `doctrine:schema:update` or Doctrine Migrations.
 
 This means mapping information for Dislog must be loaded manually.
 
 **WARNING: It is advisable to avoid using your application's default entity manager as a `flush()` from dislog may interfere with your application**
+
+#### Doctrine ODM
+
+An example of adding the mapping information with DoctrineMongoDBBundle
+```yaml
+doctrine_mongodb:
+    document_managers:
+        default:
+            # Your main application document manager config
+        dislog:
+            connection: default
+            mappings:
+                AssimtechDislogBundle:
+                    type: xml
+                    prefix: Assimtech\Dislog\Model
+                    dir: Resources/config/doctrine/mongodb
+
+assimtech_dislog:
+    handler:
+        doctrine_document_manager:
+            document_manager: doctrine_mongodb.odm.dislog_document_manager
+```
+
+For more advanced setups please see [DoctrineMongoDBBundle Configuration](http://symfony.com/doc/current/bundles/DoctrineMongoDBBundle/config.html)
 
 #### Doctrine ORM
 
@@ -96,29 +111,79 @@ assimtech_dislog:
 
 For more advanced setups please see [DoctrineBundle Configuration](http://symfony.com/doc/master/bundles/DoctrineBundle/configuration.html)
 
-#### Doctrine MongoDB
+### Service
 
-An example of adding the mapping information with DoctrineMongoDBBundle
+You may use your own logger service which implements `Assimtech\Dislog\ApiCallLoggerInterface`.
+
 ```yaml
-doctrine_mongodb:
-    document_managers:
-        default:
-            # Your main application document manager config
-        dislog:
-            connection: default
-            mappings:
-                AssimtechDislogBundle:
-                    type: xml
-                    prefix: Assimtech\Dislog\Model
-                    dir: Resources/config/doctrine/mongodb
-
 assimtech_dislog:
     handler:
-        doctrine_document_manager:
-            document_manager: doctrine_mongodb.odm.dislog_document_manager
+        service:
+            name: App\Dislog\ApiLogger
 ```
 
-For more advanced setups please see [DoctrineMongoDBBundle Configuration](http://symfony.com/doc/current/bundles/DoctrineMongoDBBundle/config.html)
+**Note:** You are responsible for passing request / response through any processors before persisting. The easiest way to implement a custom logger is to extend the default one.
+
+```php
+namespace App\Dislog;
+
+use Assimtech\Dislog\Model\ApiCallInterface;
+use Assimtech\Dislog\ApiCallLogger;
+
+class ApiLogger extends ApiCallLogger
+{
+    public function logRequest(
+        ?string $request,
+        ?string $endpoint,
+        ?string $method,
+        string $reference = null,
+        /* callable[]|callable */ $processors = []
+    ): ApiCallInterface {
+        $processedRequest = $this->processPayload($processors, $request);
+
+        $apiCall = $this->apiCallFactory->create();
+        $apiCall
+            ->setRequest($processedRequest)
+            ->setEndpoint($endpoint)
+            ->setMethod($method)
+            ->setReference($reference)
+            ->setRequestTime(microtime(true))
+        ;
+
+        // Persist $apiCall somewhere
+
+        return $apiCall;
+    }
+
+    public function logResponse(
+        ApiCallInterface $apiCall,
+        string $response = null,
+        /* callable[]|callable */ $processors = []
+    ): void {
+        $duration = microtime(true) - $apiCall->getRequestTime();
+
+        $processedResponse = $this->processPayload($processors, $response);
+
+        $apiCall
+            ->setResponse($processedResponse)
+            ->setDuration($duration)
+        ;
+
+        // Update the persisted $apiCall
+    }
+}
+```
+
+### Stream
+
+```yaml
+assimtech_dislog:
+    handler:
+        stream:
+            identity_generator: Assimtech\Dislog\Identity\UniqueIdGenerator
+            resource: /tmp/dis.log
+            serializer: Assimtech\Dislog\Serializer\StringSerializer
+```
 
 ## Configuration reference
 
