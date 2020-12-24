@@ -7,22 +7,21 @@
 >
     <document
         name="Assimtech\Dislog\Model\ApiCall"
-        collection="api_call"
     >
         <indexes>
             <index>
-                <key name="request_datetime" />
+                <key name="requestDateTime" />
                 <option name="expireAfterSeconds" value="2592000" />
             </index>
         </indexes>
 
-        <id field-name="id" />
+        <id strategy="UUID" field-name="id" />
 
         <field field-name="endpoint" type="string" index="true" />
         <field field-name="method" type="string" index="true" />
         <field field-name="reference" type="string" nullable="true" index="true" />
-        <field field-name="requestTime" name="request_time" type="float" index="true" />
-        <field field-name="requestDateTime" name="request_datetime" type="date" />
+        <field field-name="requestTime" type="float" />
+        <field field-name="requestDateTime" type="date" />
         <field field-name="duration" type="float" nullable="true" />
         <field field-name="request" type="string" nullable="true" />
         <field field-name="response" type="string" nullable="true" />
