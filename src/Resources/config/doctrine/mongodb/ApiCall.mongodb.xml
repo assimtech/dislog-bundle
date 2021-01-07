@@ -15,13 +15,13 @@
             </index>
         </indexes>
 
-        <id strategy="UUID" field-name="id" />
+        <id />
 
         <field field-name="endpoint" type="string" index="true" />
         <field field-name="method" type="string" index="true" />
         <field field-name="reference" type="string" nullable="true" index="true" />
         <field field-name="requestTime" type="float" />
-        <field field-name="requestDateTime" type="date" />
+        <field field-name="requestDateTime" type="date_immutable" />
         <field field-name="duration" type="float" nullable="true" />
         <field field-name="request" type="string" nullable="true" />
         <field field-name="response" type="string" nullable="true" />
