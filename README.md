@@ -8,7 +8,7 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/assimtech/dislog-bundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/assimtech/dislog-bundle/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/assimtech/dislog-bundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/assimtech/dislog-bundle/?branch=master)
 
-Dislog Bundle provides symfony 2 integration for [assimtech/dislog](https://github.com/assimtech/dislog), an API Call logger.
+Dislog Bundle provides symfony ^3|^4|^5 integration for [assimtech/dislog](https://github.com/assimtech/dislog), an API Call logger.
 
 ## Installation
 
@@ -35,7 +35,7 @@ Start logging your api calls:
 $request = '<request />';
 
 /** @var \Assimtech\Dislog\ApiCallLoggerInterface $apiCallLogger */
-$apiCall = $apiCallLogger->logRequest($request, $endpoint, $method, $reference);
+$apiCall = $apiCallLogger->logRequest($request, $endpoint, $appMethod, $reference);
 
 $response = $api->transmit($request);
 
@@ -48,6 +48,17 @@ Remove old api calls:
 
 ```sh
 bin/console assimtech:dislog:remove
+```
+
+To log HTTP requests from a PSR-18 client, you may use the service `assimtech_dislog.logging_http_client`:
+
+```php
+/**
+ * @var \Psr\Http\Message\RequestInterface $request
+ * @var \Assimtech\Dislog\LoggingHttpClientInterface $httpClient
+ * @var \Psr\Http\Message\ResponseInterface $response
+ */
+$response = $httpClient->sendRequest($request, $appMethod, $reference, $requestProcessors, $responseProcessors);
 ```
 
 ## Handler configuration
@@ -135,7 +146,7 @@ class ApiLogger extends ApiCallLogger
     public function logRequest(
         ?string $request,
         ?string $endpoint,
-        ?string $method,
+        ?string $appMethod,
         string $reference = null,
         /* callable[]|callable */ $processors = []
     ): ApiCallInterface {
@@ -145,7 +156,7 @@ class ApiLogger extends ApiCallLogger
         $apiCall
             ->setRequest($processedRequest)
             ->setEndpoint($endpoint)
-            ->setMethod($method)
+            ->setMethod($appMethod)
             ->setReference($reference)
             ->setRequestTime(microtime(true))
         ;

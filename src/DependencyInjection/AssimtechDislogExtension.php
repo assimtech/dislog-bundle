@@ -19,6 +19,7 @@ class AssimtechDislogExtension extends Extension
     const API_CALL_FACTORY_ID = 'assimtech_dislog.api_call.factory';
     const HANDLER_ID = 'assimtech_dislog.handler';
     const LOGGER_ID = 'assimtech_dislog.logger';
+    const LOGGING_HTTP_CLIENT_ID = 'assimtech_dislog.logging_http_client';
 
     public function load(
         array $configs,

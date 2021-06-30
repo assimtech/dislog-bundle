@@ -1,5 +1,3 @@
 /composer.lock
-/coverage/
 /php-lint.cache
-/phpspec.yml
 /vendor/
