@@ -58,7 +58,14 @@ To log HTTP requests from a PSR-18 client, you may use the service `assimtech_di
  * @var \Assimtech\Dislog\LoggingHttpClientInterface $httpClient
  * @var \Psr\Http\Message\ResponseInterface $response
  */
-$response = $httpClient->sendRequest($request, $appMethod, $reference, $requestProcessors, $responseProcessors);
+$response = $httpClient->sendRequest(
+    $request,
+    $appMethod,
+    $reference,
+    $requestProcessors,
+    $responseProcessors,
+    $deferredLogging
+);
 ```
 
 ## Handler configuration
