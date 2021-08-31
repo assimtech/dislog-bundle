@@ -30,6 +30,6 @@ class LoggingHttpClientPass implements DependencyInjection\Compiler\CompilerPass
             ])
         ;
 
-        $container->setAlias(Dislog\LoggingHttpClient::class, AssimtechDislogExtension::LOGGING_HTTP_CLIENT_ID);
+        $container->setAlias(Dislog\LoggingHttpClientInterface::class, AssimtechDislogExtension::LOGGING_HTTP_CLIENT_ID);
     }
 }
