@@ -230,6 +230,9 @@ assimtech_dislog:
 
     preferences:
         suppress_handler_exceptions: false # By default, api call logging exceptions are suppressed (they still get emitted as warnings to the psr_logger if any)
+        endpoint_max_length: null # By default, limits endpoint max length. Recommended 255 if using a VARCHAR 255 in the storage layer
+        method_max_length: null # By default, limits endpoint max length. Recommended 255 if using a VARCHAR 255 in the storage layer
+        reference_max_length: null # By default, limits endpoint max length. Recommended 255 if using a VARCHAR 255 in the storage layer
 
     psr_logger: logger # (Optional) Psr-3 logger service name
 ```
