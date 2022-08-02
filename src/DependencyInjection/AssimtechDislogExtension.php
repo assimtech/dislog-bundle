@@ -5,16 +5,11 @@ declare(strict_types=1);
 namespace Assimtech\DislogBundle\DependencyInjection;
 
 use Assimtech\Dislog;
-use Assimtech\DislogBundle\Command;
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\Config;
+use Symfony\Component\DependencyInjection;
+use Symfony\Component\HttpKernel;
 
-class AssimtechDislogExtension extends Extension
+class AssimtechDislogExtension extends HttpKernel\DependencyInjection\Extension
 {
     const API_CALL_FACTORY_ID = 'assimtech_dislog.api_call.factory';
     const HANDLER_ID = 'assimtech_dislog.handler';
@@ -23,9 +18,12 @@ class AssimtechDislogExtension extends Extension
 
     public function load(
         array $configs,
-        ContainerBuilder $container
+        DependencyInjection\ContainerBuilder $container
     ): void {
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader = new DependencyInjection\Loader\YamlFileLoader(
+            $container,
+            new Config\FileLocator(__DIR__ . '/../Resources/config')
+        );
         $loader->load('services.yaml');
 
         $configuration = new Configuration();
@@ -40,7 +38,7 @@ class AssimtechDislogExtension extends Extension
 
     protected function createHandlerDefinition(
         $config,
-        ContainerBuilder $container
+        DependencyInjection\ContainerBuilder $container
     ): self {
         $handlers = array_keys($config['handler']);
         $handlerType = $handlers[0];
@@ -52,8 +50,8 @@ class AssimtechDislogExtension extends Extension
                     ->register(self::HANDLER_ID, Dislog\Handler\Stream::class)
                     ->setArguments([
                         $handlerConfig['resource'],
-                        new Reference($handlerConfig['identity_generator']),
-                        new Reference($handlerConfig['serializer']),
+                        new DependencyInjection\Reference($handlerConfig['identity_generator']),
+                        new DependencyInjection\Reference($handlerConfig['serializer']),
                     ])
                 ;
                 break;
@@ -61,7 +59,7 @@ class AssimtechDislogExtension extends Extension
                 $container
                     ->register(self::HANDLER_ID, Dislog\Handler\DoctrineDocumentManager::class)
                     ->setArguments([
-                        new Reference($handlerConfig['document_manager']),
+                        new DependencyInjection\Reference($handlerConfig['document_manager']),
                     ])
                 ;
                 break;
@@ -69,7 +67,7 @@ class AssimtechDislogExtension extends Extension
                 $container
                     ->register(self::HANDLER_ID, Dislog\Handler\DoctrineEntityManager::class)
                     ->setArguments([
-                        new Reference($handlerConfig['entity_manager']),
+                        new DependencyInjection\Reference($handlerConfig['entity_manager']),
                     ])
                 ;
                 break;
@@ -81,7 +79,7 @@ class AssimtechDislogExtension extends Extension
                 $container
                     ->register(self::HANDLER_ID, Dislog\Handler\DoctrineObjectManager::class)
                     ->setArguments([
-                        new Reference($handlerConfig['object_manager']),
+                        new DependencyInjection\Reference($handlerConfig['object_manager']),
                     ])
                 ;
                 break;
@@ -92,7 +90,9 @@ class AssimtechDislogExtension extends Extension
                 );
                 break;
             default:
-                throw new InvalidArgumentException('Unsupported handler type: ' . $handlerType);
+                throw new DependencyInjection\Exception\InvalidArgumentException(
+                    "Unsupported handler type: {$handlerType}"
+                );
         }
 
         $container->setAlias(Dislog\Handler\HandlerInterface::class, self::HANDLER_ID);
@@ -102,15 +102,18 @@ class AssimtechDislogExtension extends Extension
 
     protected function createLoggerDefinition(
         $config,
-        ContainerBuilder $container
+        DependencyInjection\ContainerBuilder $container
     ): self {
         $container
             ->register(self::LOGGER_ID, Dislog\ApiCallLogger::class)
             ->setArguments([
-                new Reference(self::API_CALL_FACTORY_ID),
-                new Reference(self::HANDLER_ID),
+                new DependencyInjection\Reference(self::API_CALL_FACTORY_ID),
+                new DependencyInjection\Reference(self::HANDLER_ID),
                 $config['preferences'],
-                new Reference($config['psr_logger'], ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+                new DependencyInjection\Reference(
+                    $config['psr_logger'],
+                    DependencyInjection\ContainerInterface::IGNORE_ON_INVALID_REFERENCE
+                ),
             ])
         ;
 
@@ -121,7 +124,7 @@ class AssimtechDislogExtension extends Extension
 
     protected function configureCommands(
         $config,
-        ContainerBuilder $container
+        DependencyInjection\ContainerBuilder $container
     ): self {
         $container->getDefinition('assimtech_dislog.command.remove')
             ->setArgument('$maxAge', $config['max_age'])

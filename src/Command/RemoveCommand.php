@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace Assimtech\DislogBundle\Command;
 
-use Assimtech\Dislog\Handler\HandlerInterface;
+use Assimtech\Dislog;
 use Assimtech\Sysexits;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console;
 
-class RemoveCommand extends Command
+class RemoveCommand extends Console\Command\Command
 {
     protected static $defaultName = 'assimtech:dislog:remove';
 
@@ -22,11 +19,11 @@ class RemoveCommand extends Command
         ;
     }
 
-    private $handler;
-    private $maxAge;
+    private Dislog\Handler\HandlerInterface $handler;
+    private int $maxAge;
 
     public function __construct(
-        HandlerInterface $handler,
+        Dislog\Handler\HandlerInterface $handler,
         int $maxAge
     ) {
         parent::__construct();
@@ -36,8 +33,8 @@ class RemoveCommand extends Command
     }
 
     protected function execute(
-        InputInterface $input,
-        OutputInterface $output
+        Console\Input\InputInterface $input,
+        Console\Output\OutputInterface $output
     ): int {
         $this->handler->remove($this->maxAge);
 

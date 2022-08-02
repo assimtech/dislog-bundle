@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Assimtech\DislogBundle\DependencyInjection;
 
-use Symfony\Component\Config\Definition\Builder\TreeBuilder;
-use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\Config;
 
-class Configuration implements ConfigurationInterface
+class Configuration implements Config\Definition\ConfigurationInterface
 {
-    public function getConfigTreeBuilder(): TreeBuilder
+    public function getConfigTreeBuilder(): Config\Definition\Builder\TreeBuilder
     {
-        $treeBuilder = new TreeBuilder('assimtech_dislog');
-        $rootNode = method_exists(TreeBuilder::class, 'getRootNode')
+        $treeBuilder = new Config\Definition\Builder\TreeBuilder('assimtech_dislog');
+        $rootNode = \method_exists(Config\Definition\Builder\TreeBuilder::class, 'getRootNode')
             ? $treeBuilder->getRootNode()
             : $treeBuilder->root('assimtech_dislog')
         ;

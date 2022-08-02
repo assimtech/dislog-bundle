@@ -7,10 +7,10 @@
     "require": {
         "php": "^7.2.5|^8",
 
-        "assimtech/dislog": "^2.3",
+        "assimtech/dislog": "^2.3|^3",
         "assimtech/sysexits": "^1",
-        "symfony/console": "^3|^4|^5",
-        "symfony/http-kernel": "^3|^4|^5"
+        "symfony/console": "^3|^4|^5|^6",
+        "symfony/http-kernel": "^3|^4|^5|^6"
     },
     "require-dev": {
         "guzzlehttp/psr7": "^1.7|^2",

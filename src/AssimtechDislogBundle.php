@@ -4,20 +4,19 @@ declare(strict_types=1);
 
 namespace Assimtech\DislogBundle;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Compiler\PassConfig;
+use Symfony\Component\HttpKernel;
+use Symfony\Component\DependencyInjection;
 
-class AssimtechDislogBundle extends Bundle
+class AssimtechDislogBundle extends HttpKernel\Bundle\Bundle
 {
     public function build(
-        ContainerBuilder $container
+        DependencyInjection\ContainerBuilder $container
     ): void {
         parent::build($container);
 
         $container->addCompilerPass(
             new DependencyInjection\Compiler\LoggingHttpClientPass(),
-            PassConfig::TYPE_BEFORE_OPTIMIZATION
+            DependencyInjection\Compiler\PassConfig::TYPE_BEFORE_OPTIMIZATION
         );
     }
 }

@@ -5,31 +5,38 @@ declare(strict_types=1);
 namespace Assimtech\DislogBundle\DependencyInjection\Compiler;
 
 use Assimtech\Dislog;
-use Assimtech\DislogBundle\DependencyInjection\AssimtechDislogExtension;
+use Assimtech\DislogBundle;
 use Psr\Http;
 use Symfony\Component\DependencyInjection;
 
 class LoggingHttpClientPass implements DependencyInjection\Compiler\CompilerPassInterface
 {
-    public function process(DependencyInjection\ContainerBuilder $container)
-    {
+    public function process(
+        DependencyInjection\ContainerBuilder $container
+    ): void {
         if ((
                 !$container->hasDefinition(Http\Client\ClientInterface::class)
                 && !$container->hasAlias(Http\Client\ClientInterface::class)
             )
             || !\class_exists(\GuzzleHttp\Psr7\Message::class)
         ) {
-            return $this;
+            return;
         }
 
         $container
-            ->register(AssimtechDislogExtension::LOGGING_HTTP_CLIENT_ID, Dislog\LoggingHttpClient::class)
+            ->register(
+                DislogBundle\DependencyInjection\AssimtechDislogExtension::LOGGING_HTTP_CLIENT_ID,
+                Dislog\LoggingHttpClient::class
+            )
             ->setArguments([
                 new DependencyInjection\Reference(Http\Client\ClientInterface::class),
-                new DependencyInjection\Reference(AssimtechDislogExtension::LOGGER_ID),
+                new DependencyInjection\Reference(DislogBundle\DependencyInjection\AssimtechDislogExtension::LOGGER_ID),
             ])
         ;
 
-        $container->setAlias(Dislog\LoggingHttpClientInterface::class, AssimtechDislogExtension::LOGGING_HTTP_CLIENT_ID);
+        $container->setAlias(
+            Dislog\LoggingHttpClientInterface::class,
+            DislogBundle\DependencyInjection\AssimtechDislogExtension::LOGGING_HTTP_CLIENT_ID
+        );
     }
 }
