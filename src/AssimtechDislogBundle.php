@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Assimtech\DislogBundle;
 
-use DependencyInjection\Compiler\LoggingHttpClientPass;
+use Assimtech\DislogBundle\DependencyInjection\Compiler\LoggingHttpClientPass;
 use Symfony\Component\HttpKernel;
 use Symfony\Component\DependencyInjection;
 
