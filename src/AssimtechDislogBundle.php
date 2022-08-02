@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Assimtech\DislogBundle;
 
+use DependencyInjection\Compiler\LoggingHttpClientPass;
 use Symfony\Component\HttpKernel;
 use Symfony\Component\DependencyInjection;
 
@@ -15,7 +16,7 @@ class AssimtechDislogBundle extends HttpKernel\Bundle\Bundle
         parent::build($container);
 
         $container->addCompilerPass(
-            new DependencyInjection\Compiler\LoggingHttpClientPass(),
+            new LoggingHttpClientPass(),
             DependencyInjection\Compiler\PassConfig::TYPE_BEFORE_OPTIMIZATION
         );
     }
